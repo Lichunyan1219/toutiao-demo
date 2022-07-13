@@ -1,16 +1,16 @@
 <template>
-  <div class="title">头条</div>
+  <div>
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
-export default {}
+import request from '@/utils/request'
+export default {
+  created() {
+    console.dir(request)
+  }
+}
 </script>
 
-<style lang="less" scoped>
-.title {
-  font-size: 30px;
-  width: 100px;
-  height: 100px;
-  background-color: pink;
-}
-</style>
+<style lang="less" scoped></style>
