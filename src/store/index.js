@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 // import storage from '@/utils/storage'
-import { setToken, getToken } from '@/utils/auth'
+import { setToken, getToken } from '@/utils'
 /* eslint-disable */
 Vue.use(Vuex)
 export default new Vuex.Store({
