@@ -13,7 +13,7 @@ export const login = (mobile, code) => {
 // 发送短信验证码接口
 export const find = (mobile) => {
   return request({
-    url: `/v1_0/sms/codes/:${mobile}`,
+    url: `/v1_0/sms/codes/${mobile}`,
     method:'GET'
   })
 }

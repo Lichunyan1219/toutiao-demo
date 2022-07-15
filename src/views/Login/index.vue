@@ -6,26 +6,27 @@
         <van-icon name="cross" />
       </template>
     </van-nav-bar>
-    <van-form @submit="onSubmit">
+    <van-form @submit="onSubmit" ref="from">
       <van-field
         v-model.number="user.mobile"
         name="mobile"
         maxlength="11"
         placeholder="请填写手机号"
-        :rules="message.phone"
+        :rules="phone"
       >
         <template slot="label"><i class="iconfont icon-shouji"> </i> </template
       ></van-field>
       <van-field
-        v-model.number="user.code"
+        v-model="user.code"
         name="code"
         maxlength="6"
         placeholder="请填写验证码"
-        :rules="message.code"
+        :rules="code"
       >
         <template slot="label"
           ><i class="iconfont icon-yanzhengma"> </i
         ></template>
+        <!-- 发送验证码 -->
         <template #button>
           <van-button
             size="small"
@@ -33,9 +34,17 @@
             class="sendBtn"
             color="#ededed"
             type="primary"
-            @click="sendCode"
+            @click.prevent="sendCode"
+            v-if="!countDown"
             >发送验证码</van-button
           >
+          <!-- 倒计时 -->
+          <van-count-down
+            :time="60 * 1000"
+            v-if="countDown"
+            format="ss s"
+            @finish="countDown = false"
+          />
         </template>
       </van-field>
       <div style="margin: 16px">
@@ -44,8 +53,8 @@
           type="info"
           class="findbtn-page"
           native-type="submit"
-          @click="onSubmit"
-          >提交</van-button
+          @click.prevent="onSubmit"
+          >登录</van-button
         >
       </div>
     </van-form>
@@ -53,62 +62,55 @@
 </template>
 
 <script>
-import { login, find } from '@/API/user.js'
-// import {  } from '@/API/user.js'
-
+/* eslint-disable */
+import { phone, code } from './rules.js' // 表单验证规则
+import { login, find } from '@/API/user.js' // 登录验证接口，验证码接口
 export default {
   data() {
     return {
       user: {
-        mobile: '13911111111',
-        code: '246810'
+        mobile: '', // 手机号
+        code: '' // 验证码
       },
-      message: {
-        phone: [
-          {
-            required: true,
-            message: '请填写手机号'
-            // trigger: 'blur'
-          },
-          {
-            pattern: /^1[3|5|7|8]\d{9}$/,
-            message: '请填写正确的手机号'
-            // trigger: 'onblur'
-          }
-        ],
-        code: [
-          {
-            required: true,
-            message: '请填写验证码'
-            // trigger: 'onblur'
-          },
-          {
-            pattern: /^\d{6}$/,
-            message: '请填写正确的验证码'
-            // trigger: 'blur'
-          }
-        ]
-      }
+      phone, // 手机号验证规则
+      code, // 验证码验证规则
+      countDown: false // 是否倒计时
     }
   },
   methods: {
     // 登录注册
     async onSubmit() {
+      this.$toast.loading({ message: '登录中...', forbidClick: true })
+
       try {
         const res = await login(this.user.mobile, this.user.code)
-        console.log(res)
-        console.log('登录成功')
+        this.$toast.success('登录成功')
+        this.$router.push('/my')
+        // 登录成功将返回的数据token存入到vuex中，通过commit方法调用store中的setUser方法改变store中的user值，来存储token
+        this.$store.commit('setUser', res.data.data)
       } catch (err) {
-        console.log(err)
+        if (err.response.status === 507) {
+          this.$toast.fail('服务异常，请稍后再试')
+        } else {
+          this.$toast.fail(err.response.data.message)
+        }
       }
     },
     // 发送验证码
     async sendCode() {
       try {
+        await this.$refs.from.validate('mobile') // 验证手机号是否为空
+        this.countDown = true
         const mobile = this.user.mobile
-        const res = await find(mobile)
-        console.log(res)
-      } catch (err) {}
+        await find(mobile)
+        this.$toast.success('发送成功')
+      } catch (err) {
+        if (err.response.status === 507) {
+          this.$toast.fail('服务异常，请稍后再试')
+        } else {
+          this.$toast.fail(err.response.data.message || '手机号不正确')
+        }
+      }
     }
   }
 }
