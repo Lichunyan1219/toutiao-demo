@@ -1,12 +1,12 @@
 // 用户信息接口
 /* eslint-disable */
-
+import store from '@/store'
 import request from '@/utils/request'
 // 登录注册接口
 export const login = (mobile, code) => {
   return request({
     url: '/v1_0/authorizations',
-    method:'POST',
+    method: 'POST',
     data: { mobile, code }
   })
 }
@@ -14,7 +14,16 @@ export const login = (mobile, code) => {
 export const find = (mobile) => {
   return request({
     url: `/v1_0/sms/codes/${mobile}`,
-    method:'GET'
+    method: 'GET'
   })
 }
 //  default { login, find }
+
+// 获取用户信息
+
+export const users = () => {
+  return request({
+    url: '/v1_0/user',
+    method: 'GET'
+  })
+}

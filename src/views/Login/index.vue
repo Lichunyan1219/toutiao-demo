@@ -1,7 +1,7 @@
 <template>
   <div class="login-form">
     <!-- 标题栏 -->
-    <van-nav-bar title="登录">
+    <van-nav-bar title="登录" @click-left="onClickLeft">
       <template #left>
         <van-icon name="cross" />
       </template>
@@ -111,6 +111,9 @@ export default {
           this.$toast.fail(err.response.data.message || '手机号不正确')
         }
       }
+    },
+    onClickLeft() {
+      this.$router.back()
     }
   }
 }
