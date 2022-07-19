@@ -55,7 +55,7 @@ import { getChannelAll } from '@/API/channel'
 export default {
   data() {
     return {
-      show: true,
+      show: false,
       channelsAll: [],
       isShow: false
     }

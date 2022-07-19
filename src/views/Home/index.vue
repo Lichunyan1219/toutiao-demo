@@ -35,9 +35,11 @@
 </template>
 
 <script>
+/* eslint-disable */
 import EditChannel from '@/components/EditChannel'
 import ArticleList from '@/components/ArticleList.vue'
-import { getChannel } from '@/API/channel'
+import { getChannel, delChannel, addChannel } from '@/API/channel'
+import { GetChannel, SetChannel } from '@/utils/auth'
 
 export default {
   data() {
@@ -47,13 +49,29 @@ export default {
       channelList: []
     }
   },
+  computed: {
+    user() {
+      // 两个感叹号转换为布尔值
+      return !!this.$store.state.user.token
+    }
+  },
   created() {
     this.getChannel()
   },
   methods: {
     async getChannel() {
-      const { data } = await getChannel()
-      this.channelList = data.data.channels
+      if (!this.user) {
+        const channel = GetChannel()
+        if (channel) {
+          this.channelList = channel
+        } else {
+          const { data } = await getChannel()
+          this.channelList = data.data.channels
+        }
+      } else {
+        const { data } = await getChannel()
+        this.channelList = data.data.channels
+      }
       // console.log(this.channelList)
     },
     isShow() {
@@ -61,17 +79,38 @@ export default {
       this.$refs.popup.show = !this.$refs.show
     },
     // 删除
-    delChannel(id) {
+    async delChannel(id) {
       this.channelList = this.channelList.filter((ele) => ele.id !== id)
+      if (!this.user) {
+        SetChannel(this.channelList)
+        this.$toast('删除成功')
+      } else {
+        try {
+          await delChannel(id)
+          this.$toast('删除成功')
+        } catch (err) {
+          this.$toast('删除失败')
+        }
+      }
     },
     // 切换
     cutChannel(index) {
       this.active = index
-      this.$refs.popup.show = false
     },
     // 添加
-    addChannel(ele) {
+    async addChannel(ele) {
       this.channelList.push(ele)
+      if (!this.user) {
+        SetChannel(this.channelList)
+        this.$toast('添加成功')
+      } else {
+        try {
+          await addChannel(ele.id, this.channelList.length)
+          this.$toast('添加成功')
+        } catch (err) {
+          this.$toast('添加失败')
+        }
+      }
     }
   },
   components: {
