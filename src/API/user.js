@@ -1,6 +1,6 @@
 // 用户信息接口
 /* eslint-disable */
-import store from '@/store'
+// import store from '@/store'
 import request from '@/utils/request'
 // 登录注册接口
 export const login = (mobile, code) => {

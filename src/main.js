@@ -9,7 +9,6 @@ import 'vant/lib/index.css' // 引入vant样式
 import './styles/index.css' // 引入全局css样式
 Vue.use(Vant) // 全局使用vant
 Vue.config.productionTip = false
-
 new Vue({
   router,
   store,
