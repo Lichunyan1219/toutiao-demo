@@ -28,7 +28,7 @@
               v-for="(ele, index) in list"
               :key="ele.id"
               @click="delChannel(ele.id, index)"
-              ><template #icon>
+              ><template #icon v-if="ele.id!=0">
                 <van-icon name="cross" v-show="isShow" /> </template
             ></van-grid-item>
           </van-grid>

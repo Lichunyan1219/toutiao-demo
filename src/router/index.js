@@ -7,7 +7,7 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/login',
+    path: '/',
     component: () => import('@/views/Login')
   },
   {
@@ -32,6 +32,10 @@ const routes = [
         component: () => import('@/views/Qa')
       }
     ]
+  },
+  {
+    path: '/search',
+    component: () => import('@/views/Search')
   }
 ]
 
