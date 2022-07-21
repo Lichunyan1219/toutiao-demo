@@ -56,7 +56,6 @@ export default {
         this.articles = data.data.results
         // console.log(this.articles)
         this.times = data.data.pre_timestamp
-        // console.log(this.times)
       } catch (err) {
         const status = err.response.status
         if (status === 400) {
@@ -69,15 +68,16 @@ export default {
     async GetOnLoad() {
       try {
         const { data } = await getChannel(this.times, this.id)
-        if (this.times !== data.data.pre_timestamp) {
-          if (this.refreshing) {
-            this.articles.unshift(...data.data.results)
-          } else {
-            this.articles.push(...data.data.results)
-          }
-
-          this.preTimestamp = data.data.pre_timestamp
+        this.times = data.data.pre_timestamp
+        // if (this.times !== data.data.pre_timestamp) {
+        if (this.refreshing) {
+          this.articles.unshift(...data.data.results)
+        } else {
+          this.articles.push(...data.data.results)
         }
+
+        this.preTimestamp = data.data.pre_timestamp
+        // }
         if (!this.preTimestamp) {
           this.finished = true
         }

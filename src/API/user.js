@@ -27,3 +27,20 @@ export const users = () => {
     method: 'GET'
   })
 }
+// 关注请求
+export const attention = (target) => {
+  return request({
+    url: '/v1_0/user/followings',
+    method: 'POST',
+    data: {
+      target
+    }
+  })
+}
+// 取消关注请求
+export const unfollow = (target) => {
+  return request({
+    url: `/v1_0/user/followings/${target}`,
+    method: 'DELETE'
+  })
+}

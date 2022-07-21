@@ -40,7 +40,7 @@ export default {
             this.show = false
           }
         } catch (err) {
-          console.log(err)
+          // console.log(err)
         }
       }
     },
