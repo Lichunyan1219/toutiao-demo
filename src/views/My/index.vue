@@ -10,7 +10,9 @@
             <img :src="list.photo" alt="" />
             <p>{{ list.name }}</p>
           </div>
-          <van-button class="data-btn">编辑资料</van-button>
+          <van-button class="data-btn" @click="$router.push('/editdata')"
+            >编辑资料</van-button
+          >
         </div>
         <van-grid :border="false">
           <van-grid-item class="data-msg">

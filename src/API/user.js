@@ -44,3 +44,27 @@ export const unfollow = (target) => {
     method: 'DELETE'
   })
 }
+// 获取用户个人资料
+export const userData = () => {
+  return request({
+    url: '/v1_0/user/profile',
+    method: 'GET'
+  })
+}
+
+// 改变用户个人资料
+export const changeUserData = (data) => {
+  return request({
+    url: '/v1_0/user/profile',
+    method: 'PATCH',
+    data
+  })
+}
+// 改变用户头像
+export const uploadPhoto = (file) => {
+  return request({
+    url: '/v1_0/user/photo',
+    method: 'PATCH',
+    data: file
+  })
+}
